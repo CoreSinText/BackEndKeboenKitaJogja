@@ -68,7 +68,7 @@ router.post("/admin/tambah", async (ctx) => {
 })
 
 // * Put Data Admin
-router.put("/admin/:1", async (ctx) => {
+router.put("/admin/ubah", async (ctx) => {
   const reqBody = await ctx.request.body().value
   ubahAdmin(reqBody.newName, reqBody.newJk, reqBody.newNomor, reqBody.newAlamat, reqBody.newPassword, reqBody.userId)
   ctx.response.body = `Data Admin Berhasil Di Ubah`
@@ -76,28 +76,28 @@ router.put("/admin/:1", async (ctx) => {
 })
 
 // * Put Data Produk
-router.put("/produk/:id", async (ctx) => {
+router.put("/produk/ubah", async (ctx) => {
   const reqBody = await ctx.request.body().value
-  ubahProduk(reqBody.produkId)
+  ubahProduk(reqBody.produkId, reqBody.namaProduk, reqBody.harga)
   ctx.response.body = `Data Produk Berhasil Diubah`
 })
 
 // * Delete Produk
-router.delete("/produk/:id", async (ctx) => {
+router.delete("/produk/hapus", async (ctx) => {
   const reqBody = await ctx.request.body().value
   deleteProduk(reqBody.idProduk)
   ctx.response.body = `Data Produk Berhasi Dirubah`
 })
 
 // * Delete Transaksi
-router.delete("/transaksi/:id", async (ctx) => {
+router.delete("/transaksi/hapus", async (ctx) => {
   const reqBody = await ctx.request.body().value
   deleteTransaksi(reqBody.idTransaksi)
   ctx.response.body = `Data Transaksi Berhasil Dirubah`
 })
 
 // * Delete Admin
-router.delete("/admin/:id", async (ctx) => {
+router.delete("/admin/hapus", async (ctx) => {
   const reqBody = await ctx.request.body().value
   deleteAdmin(reqBody.idAdmin)
   ctx.response.body = `Data Admin Berhasil Dihapus`

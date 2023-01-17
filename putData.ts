@@ -6,6 +6,6 @@ export function ubahAdmin(newName: string, newJk: string, newNomor: number, newA
 }
 
 // * Mengubaha data Produk
-export function ubahProduk(produkId: number) {
-    client.query(`UPDATE produk SET nama_produk = "asdads", harga_produk = 2123 WHERE produk.produk_id = ${produkId}`)
+export function ubahProduk(produkId: number, namaProduk: string, harga: number) {
+    client.query(`UPDATE produk SET nama_produk = "${namaProduk}", harga_produk = ${harga} WHERE produk.produk_id = ${produkId}`)
 }
