@@ -15,3 +15,8 @@ export function tambahTransaksi(tanggal:string, namaPembeli:string,produkId:numb
 export function tambahStokBarang (idBarang:number, stokSebelumnya:number, barangMasuk:number){
     return client.query(`UPDATE stok_barang SET ketersediaan_barang = ${stokSebelumnya} + ${barangMasuk} WHERE stok_id = ${idBarang}`)
 }
+
+// * Menambahkan Data Admin
+export function tambahAdmin(namaUser:string, jk:string, nomoHp:number, alamat:string, password:string){
+    client.query(`INSERT INTO user (nama_user, jenis_kelamin, nomor_telepon, alamat, password) VALUE ("${namaUser}", "${jk}", ${nomoHp}, "${alamat}", "${password}")`)
+}
