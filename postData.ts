@@ -17,6 +17,6 @@ export function tambahStokBarang (idBarang:number, stokSebelumnya:number, barang
 }
 
 // * Menambahkan Data Admin
-export function tambahAdmin(namaUser:string, jk:string, nomoHp:number, alamat:string, password:string){
-    client.query(`INSERT INTO user (nama_user, jenis_kelamin, nomor_telepon, alamat, password) VALUE ("${namaUser}", "${jk}", ${nomoHp}, "${alamat}", "${password}")`)
+export function tambahAdmin(namaUser:string, jk:string,noHp:number, alamat:string, password:string){
+    client.query(`INSERT INTO user (nama_user, jenis_kelamin, nomor_telepon, alamat, password) VALUE ("${namaUser}", "${jk}", ${noHp}, "${alamat}", "${password}")`)
 }
