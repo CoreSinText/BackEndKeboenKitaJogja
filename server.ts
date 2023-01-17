@@ -5,6 +5,7 @@ import { getAdmin, getProduk, getStokBarang, getTransaksiPenjualan } from './get
 import { tambahProduk, tambahTransaksi, tambahStokBarang, tambahAdmin } from './postData.ts'
 import { ubahAdmin, ubahProduk } from './putData.ts'
 import { deleteAdmin, deleteProduk, deleteTransaksi } from './deleteData.ts'
+import { cariBarang, cariUser, cariProduk } from './search.ts'
 
 const router = new Router();
 
@@ -26,10 +27,25 @@ router.get("/stokbarang", async (ctx) => {
   ctx.response.body = dataStokBarang
 })
 
+// * Get Transaksi
 router.get("/transaksi", async (ctx) => {
   const dataTransaksi = await getTransaksiPenjualan
   ctx.response.body = dataTransaksi
   ctx.response.status = 200
+})
+
+// * Get Cari stok
+router.post("/cari/stok", async (ctx) => {
+  const reqBody = await ctx.request.body().value
+  const search = await cariBarang(reqBody.idStok)
+  ctx.response.body = search
+})
+
+//* Cari Produk
+router.post("/cari/produk", async (ctx) => {
+  const reqBody = await ctx.request.body().value
+  const search = await cariProduk(reqBody.idProduk)
+  ctx.response.body = search
 })
 
 // * Post Produk
