@@ -5,7 +5,7 @@ import { tambahProduk, tambahTransaksi, tambahStokBarang, tambahAdmin } from './
 import { ubahAdmin, ubahProduk } from './putData.ts'
 import { deleteAdmin, deleteProduk, deleteTransaksi } from './deleteData.ts'
 import { cariBarang, cariUser, cariProduk } from './search.ts'
-import { createToken, decodeToken, Login } from './auth.ts'
+import { createToken, decodeToken } from './auth.ts'
 import { client } from './connection.ts'
 
 const router = new Router();
@@ -133,8 +133,6 @@ router.post("/keboen/login", async (ctx) => {
     return ctx.response.body = { message: "Username tidak ditemukan" }
   } else {
     let haveUsername = dataUser[0]
-    console.log(haveUsername);
-
     if (await decodeToken(haveUsername.password) == reqBody.password) {
 
       ctx.response.body = {
@@ -143,12 +141,15 @@ router.post("/keboen/login", async (ctx) => {
         pemilik: haveUsername.is_super_admin
       }
     } else {
+      ctx.response.status = 401
       ctx.response.body = { message: "Login Gagal" }
     }
 
   }
 
 })
+
+
 
 
 const app = new Application();
