@@ -2,7 +2,7 @@ import { client } from "./connection.ts";
 
 // * Cari Barang
 export async function cariBarang(idStok: number) {
-    return await client.query(`SELECT * FROM stok_barang WHERE stok_barang.stok_id = ${idStok}`)
+    return await client.query(`SELECT * FROM stok_barang WHERE stok_barang.produk_id = ${idStok}`)
 }
 
 export async function cariUser(idUser: number) {
