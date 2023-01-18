@@ -12,3 +12,7 @@ export async function cariUser(idUser: number) {
 export async function cariProduk(idProduk: number) {
     return await client.query(`SELECT * FROM produk WHERE produk_id = ${idProduk}`)
 }
+
+export async function login(username: string, password: string) {
+    return await client.query(``)
+}

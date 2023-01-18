@@ -1,36 +1,36 @@
 import { Application, Router } from "https://deno.land/x/oak/mod.ts";
 import { oakCors } from "https://deno.land/x/cors/mod.ts";
 
-import { getAdmin, getProduk, getStokBarang, getTransaksiPenjualan } from './getData.ts'
 import { tambahProduk, tambahTransaksi, tambahStokBarang, tambahAdmin } from './postData.ts'
 import { ubahAdmin, ubahProduk } from './putData.ts'
 import { deleteAdmin, deleteProduk, deleteTransaksi } from './deleteData.ts'
 import { cariBarang, cariUser, cariProduk } from './search.ts'
 import { createToken, decodeToken } from './auth.ts'
+import { client } from './connection.ts'
 
 const router = new Router();
 
 // * Get Produk
 router.get("/produk", async (ctx) => {
-  const dataProduk = await getProduk
+  const dataProduk = await client.query("SELECT * FROM produk")
   ctx.response.body = dataProduk
 });
 
 // * Get Admin
 router.get("/admin", async (ctx) => {
-  const dataAdmin = await getAdmin
+  const dataAdmin = await client.query("SELECT * FROM `user` WHERE `user`.is_super_admin = 0")
   ctx.response.body = dataAdmin
 })
 
 // * Get Stok Barang
 router.get("/stokbarang", async (ctx) => {
-  const dataStokBarang = await getStokBarang
+  const dataStokBarang = await client.query("SELECT stok_barang.stok_id, stok_barang.produk_id, produk.nama_produk, stok_barang.ketersediaan_barang FROM stok_barang JOIN produk ON produk.produk_id = stok_barang.produk_id")
   ctx.response.body = dataStokBarang
 })
 
 // * Get Transaksi
 router.get("/transaksi", async (ctx) => {
-  const dataTransaksi = await getTransaksiPenjualan
+  const dataTransaksi = await client.query('SELECT transaksi_penjualan.transaksi_id, transaksi_penjualan.nama_pembeli, transaksi_penjualan.tanggal, transaksi_penjualan.jumlah_pembelian, produk.nama_produk, transaksi_penjualan.total_transaksi FROM transaksi_penjualan JOIN produk WHERE produk.produk_id = transaksi_penjualan.produk_id')
   ctx.response.body = dataTransaksi
   ctx.response.status = 200
 })
