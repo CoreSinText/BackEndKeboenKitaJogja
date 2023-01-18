@@ -5,7 +5,7 @@ import { tambahProduk, tambahTransaksi, tambahStokBarang, tambahAdmin } from './
 import { ubahAdmin, ubahProduk } from './putData.ts'
 import { deleteAdmin, deleteProduk, deleteTransaksi } from './deleteData.ts'
 import { cariBarang, cariUser, cariProduk } from './search.ts'
-import { createToken, decodeToken } from './auth.ts'
+import { createToken, decodeToken, Login } from './auth.ts'
 import { client } from './connection.ts'
 
 const router = new Router();
@@ -122,6 +122,33 @@ router.delete("/admin/hapus", async (ctx) => {
   ctx.response.body = `Data Admin Berhasil Dihapus`
 })
 
+
+// * Login
+router.post("/keboen/login", async (ctx) => {
+  const reqBody = await ctx.request.body().value
+  const dataUser = await client.query(`SELECT * FROM user WHERE user.nama_user = "${reqBody.username}"`)
+  // Login(dataUser)
+  if (dataUser.length === 0) {
+    ctx.response.status = 401
+    return ctx.response.body = { message: "Username tidak ditemukan" }
+  } else {
+    let haveUsername = dataUser[0]
+    console.log(haveUsername);
+
+    if (await decodeToken(haveUsername.password) == reqBody.password) {
+
+      ctx.response.body = {
+        nama: haveUsername.nama_user,
+        password: haveUsername.password,
+        pemilik: haveUsername.is_super_admin
+      }
+    } else {
+      ctx.response.body = { message: "Login Gagal" }
+    }
+
+  }
+
+})
 
 
 const app = new Application();

@@ -11,6 +11,8 @@ export async function createToken(data: any) {
 }
 
 export async function decodeToken(data: any) {
-    return await djwt.decode(data)
+    const [payload, signature, header] = djwt.decode(data)
+    return await signature
 }
+
 
