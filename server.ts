@@ -6,6 +6,7 @@ import { tambahProduk, tambahTransaksi, tambahStokBarang, tambahAdmin } from './
 import { ubahAdmin, ubahProduk } from './putData.ts'
 import { deleteAdmin, deleteProduk, deleteTransaksi } from './deleteData.ts'
 import { cariBarang, cariUser, cariProduk } from './search.ts'
+import { createToken, decodeToken } from './auth.ts'
 
 const router = new Router();
 
@@ -78,8 +79,10 @@ router.post("/stokbarang/tambah", async (ctx) => {
 // * Post Tambah Admin
 router.post("/admin/tambah", async (ctx) => {
   const reqBody = await ctx.request.body().value
-  tambahAdmin(reqBody.namaUser, reqBody.jk, reqBody.noHp, reqBody.alamat, reqBody.password)
-  ctx.response.body = `Data Admin Berhasil Ditambahkan`
+  const pass = await createToken(reqBody.password)
+  tambahAdmin(reqBody.namaUser, reqBody.jk, reqBody.noHp, reqBody.alamat, pass)
+  console.log(pass);
+
 
 })
 
