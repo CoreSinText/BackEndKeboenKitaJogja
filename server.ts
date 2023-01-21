@@ -5,7 +5,7 @@ import { tambahProduk, tambahTransaksi, tambahStokBarang, tambahAdmin } from './
 import { ubahAdmin, ubahProduk } from './putData.ts'
 import { deleteAdmin, deleteProduk, deleteTransaksi } from './deleteData.ts'
 import { cariBarang, cariUser, cariProduk } from './search.ts'
-import { createToken, decodeToken } from './auth.ts'
+import { createToken, decodeToken, userToken, verifyUser } from './auth.ts'
 import { client } from './connection.ts'
 
 const router = new Router();
@@ -32,7 +32,6 @@ router.get("/stokbarang", async (ctx) => {
 router.get("/transaksi", async (ctx) => {
   const dataTransaksi = await client.query('SELECT transaksi_penjualan.transaksi_id, transaksi_penjualan.nama_pembeli, transaksi_penjualan.tanggal, transaksi_penjualan.jumlah_pembelian, produk.nama_produk, transaksi_penjualan.total_transaksi FROM transaksi_penjualan JOIN produk WHERE produk.produk_id = transaksi_penjualan.produk_id')
   ctx.response.body = dataTransaksi
-  ctx.response.status = 200
 })
 
 // * Get Cari stok
@@ -81,9 +80,7 @@ router.post("/admin/tambah", async (ctx) => {
   const reqBody = await ctx.request.body().value
   const pass = await createToken(reqBody.password)
   tambahAdmin(reqBody.namaUser, reqBody.jk, reqBody.noHp, reqBody.alamat, pass)
-  console.log(pass);
-
-
+  ctx.response.body = `Data Barang Berhasil Ditambahkan`
 })
 
 // * Put Data Admin
@@ -132,12 +129,12 @@ router.post("/keboen/login", async (ctx) => {
     ctx.response.status = 401
     return ctx.response.body = { message: "Username tidak ditemukan" }
   } else {
-    let haveUsername = dataUser[0]
+    const haveUsername: any = dataUser[0]
     if (await decodeToken(haveUsername.password) == reqBody.password) {
 
       ctx.response.body = {
         nama: haveUsername.nama_user,
-        password: haveUsername.password,
+        password: reqBody.password,
         pemilik: haveUsername.is_super_admin
       }
     } else {
@@ -149,11 +146,23 @@ router.post("/keboen/login", async (ctx) => {
 
 })
 
+router.post("/local/token", async (ctx) => {
+  const reqBody = await ctx.request.body().value
+  const data = await userToken(reqBody.pemilik)
+  ctx.response.body = {
+    status: data
+  }
+})
 
+router.put("/local/decode", async (ctx) => {
+  const reqBody = await ctx.request.body().value
+  const data: any = await verifyUser(reqBody.data)
+  ctx.response.body = `${data}`
+})
 
 
 const app = new Application();
-app.use(oakCors());
+app.use(oakCors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(router.routes());
 app.use(router.allowedMethods());
 
